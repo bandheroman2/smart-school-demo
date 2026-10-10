@@ -885,6 +885,31 @@ function gradeBars(){
 }
 
 /* ================= العرض ================= */
+/* ══════════════ شاشات تعرض **بيانات مولَّدة** لا سجلّات خادم ══════════════
+   في الوضع المحلي الوسم واضح أصلًا («وضع تجريبي محلي»)، فلا حرج. أمّا حين
+   يكون الخادم موصولًا فالمستخدمة تظنّ أنّ كلّ ما تراه رسميّ — وهذه الشاشات
+   لم تُوصَل بمصدر. عرضُها بلا وسم **كذبٌ على المديرة**، وهو أسوأ من نقص ميزة.
+   نُعلن كلًّا منها بما يخصّها (لا بعبارة عامّة) لأنّ الإعلان الغامض كالإخفاء. */
+const UNBACKED={
+  cards:    "حالات البطاقات (نشطة/مفقودة) لا تُقرأ من الخادم — الجميع يظهر «غير مرتبطة»",
+  timetable:"التوقيت نموذجيّ ثابت: لا يُقرأ من الخادم ولا يُحفظ فيه",
+  calendar: "الأحداث تجريبية مولَّدة في المتصفّح، ولا مصدر لها على الخادم",
+  parents:  "عمود «الحالة: مفعّل» وهميّ — لا حساب وليّ أمر على الخادم بعد",
+  summons:  "لا يُزامَن الاستدعاء، ولا يصل وليّ الأمر عبر قناة حقيقية بعد",
+  gate:     "قارئ البطاقات محاكاة: سجلّ البوابة مولَّد، ولا جهاز حقيقيّ موصول",
+};
+function markUnbacked(){
+  if(SYNC.mode!=="remote") return;
+  for(const k in UNBACKED){
+    const sec=document.getElementById(k);
+    if(!sec || sec.querySelector(".nb-flag")) continue;   /* مرّة واحدة لا في كل render */
+    const d=document.createElement("div");
+    d.className="notice y nb-flag";
+    d.style.marginBottom="10px";
+    d.innerHTML=`⚠️ <b>${esc(UNBACKED[k])}</b>`;
+    sec.insertBefore(d,sec.firstElementChild);
+  }
+}
 function render(){
   const s=stats();
   // KPI dashboard
@@ -978,6 +1003,7 @@ function render(){
   renderGrades(); renderBook(); renderTimetable(); renderEvents(); renderAnnouncements(); renderInbox(); renderTeacherTools(); renderSummons();
 
   updateBell();
+  markUnbacked();
   saveState();
 }
 function kpiCard(label,icon,value,cls){return `<div class="card"><div class="label">${icon} ${label}</div><div class="value ${cls}">${value}</div></div>`;}
