@@ -1257,7 +1257,13 @@ function renderDemoAccounts(){
     [s0?("تلميذة — "+first(s0.name)):"تلميذة", s0?s0.card:"—", DEMO_PIN_STUDENT],
     [s1?("تلميذة — "+first(s1.name)):"تلميذة", s1?s1.card:"—", DEMO_PIN_STUDENT]
   ];
-  el.innerHTML="<tbody>"+rows.map(([lab,id,pin])=>
+  el.innerHTML="<tbody>"
+    +"<tr><td colspan='3' style='text-align:center;color:var(--muted);line-height:1.9;"
+    +"background:rgba(247,148,30,.10);border-radius:8px;padding:8px'>"
+    +"⚠️ هذه أكواد <b>الوضع المحلي</b> — هذا الجهاز وحده. وهي <b>تختلف عن رموز الخادم</b>: "
+    +"المنصّة الموصولة ترفضها. عند التوصيل استعملي الرموز في <span class='code'>roster.csv</span>."
+    +"</td></tr>"
+    +rows.map(([lab,id,pin])=>
     `<tr><td>${esc(lab)}</td><td><span class="code">${esc(id)}</span></td><td><span class="code">${esc(pin)}</span></td></tr>`).join("")+"</tbody>";
 }
 
@@ -2814,8 +2820,8 @@ renderDemoAccounts();
 (function setLoginMode(){
   const el=document.getElementById("loginMode"); if(!el) return;
   el.innerHTML = (SYNC.mode==="remote")
-    ? "متّصل بالخادم · ادخلي برقم بطاقتك أو اسم المستخدم."
-    : "وضع تجريبي محلي · البيانات في هذا الجهاز وحده (لا خادم). حسابات التجربة أدناه.";
+    ? "متّصل بالخادم · ادخلي برقم بطاقتك أو اسم المستخدم. <b>رموز الدخول في ملفّ <span class='code'>roster.csv</span>.</b>"
+    : "وضع تجريبي محلي · البيانات في هذا الجهاز وحده (لا خادم). حسابات التجربة أدناه — <b>وهي لا تعمل على الخادم</b>.";
 })();
 if(SYNC.mode==="remote" && QUEUE.length) scheduleFlush(1500);
 
